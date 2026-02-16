@@ -94,6 +94,10 @@
             return slotValue <= remainingSlots;
         });
         secondaryWeapon.value = random<Weapon>(potentialSecondaryWeapons);
+        secondaryWeaponAmmoSlots.value = [];
+        for (let i = 0; i < secondaryWeapon.value.ammo_slots; ++i) {
+            secondaryWeaponAmmoSlots.value.push(random(secondaryWeapon.value.ammo_types));
+        }
 
         tools.value = [];
         const medkit = dbTools.value.find(t => t.name === 'Medkit');
@@ -148,7 +152,7 @@
                 </div>
 
                 <div class="flex w-full border-t border-stone-700">
-                    <div v-for="ammoSlot in primaryWeaponAmmoSlots" class="px-4 py-2 flex-1 flex border-l first:border-0 border-stone-700">
+                    <div v-for="ammoSlot in secondaryWeaponAmmoSlots" class="px-4 py-2 flex-1 flex border-l first:border-0 border-stone-700">
                         {{ ammoSlot.name }}
                     </div>
                 </div>
