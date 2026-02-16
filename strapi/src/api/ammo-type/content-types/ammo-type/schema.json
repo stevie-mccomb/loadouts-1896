@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ammo_types",
+  "info": {
+    "singularName": "ammo-type",
+    "pluralName": "ammo-types",
+    "displayName": "Ammo Type"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "maxLength": 255,
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "string",
+      "maxLength": 255,
+      "required": true,
+      "unique": true
+    }
+  }
+}

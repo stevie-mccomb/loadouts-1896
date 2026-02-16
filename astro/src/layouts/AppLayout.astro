@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+import AppHeader from '@components/AppHeader.astro';
+---
+
+<html lang="en">
+<head>
+    <!-- Metadata -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Pre-connections -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- PWA/Icons -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Rye&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <script is:inline src="https://kit.fontawesome.com/eb7fa59881.js" crossorigin="anonymous" async defer></script>
+
+    <title>
+        Loadouts 1896
+    </title>
+</head>
+<body>
+    <div class="top-0 left-0 w-full h-full flex flex-col">
+        <AppHeader />
+        
+        <main class="flex-1 p-4">
+            <slot />
+        </main>
+    </div>
+</body>
+</html>

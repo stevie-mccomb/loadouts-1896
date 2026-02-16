@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Open Sans', sans-serif;
+}
+
+html, body {
+    color: var(--color-stone-300);
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    background-color: var(--color-stone-900);
+}
+
+
+.newsreader-regular {
+    font-family: "Newsreader", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+.newsreader-bold {
+    font-family: "Newsreader", serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+.newsreader-italic {
+    font-family: "Newsreader", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+}
+
+
+.newsreader-bold-italic {
+    font-family: "Newsreader", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.rye-regular {
+  font-family: "Rye", serif;
+  font-weight: 400;
+  font-style: normal;
+}

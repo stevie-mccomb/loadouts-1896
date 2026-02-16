@@ -1,0 +1,25 @@
+{
+    "kind": "collectionType",
+    "collectionName": "consumables",
+    "info": {
+        "singularName": "consumable",
+        "pluralName": "consumables",
+        "displayName": "Consumable"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "maxLength": 255,
+            "required": true
+        },
+        "utility": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::utility.utility"
+        }
+    }
+}

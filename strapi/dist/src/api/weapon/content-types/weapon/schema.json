@@ -1,0 +1,57 @@
+{
+    "kind": "collectionType",
+    "collectionName": "weapons",
+    "info": {
+        "singularName": "weapon",
+        "pluralName": "weapons",
+        "displayName": "Weapon"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "maxLength": 255,
+            "required": true,
+            "unique": true
+        },
+        "slots": {
+            "type": "enumeration",
+            "required": true,
+            "enum": [
+                "one",
+                "two",
+                "three"
+            ]
+        },
+        "can_akimbo": {
+            "type": "boolean",
+            "conditions": {
+                "visible": {
+                    "==": [
+                        {
+                            "var": "slots"
+                        },
+                        "one"
+                    ]
+                }
+            },
+            "required": true,
+            "default": false
+        },
+        "ammo_types": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::ammo-type.ammo-type"
+        },
+        "ammo_slots": {
+            "type": "integer",
+            "required": true,
+            "default": 1,
+            "min": 1,
+            "max": 2
+        }
+    }
+}
