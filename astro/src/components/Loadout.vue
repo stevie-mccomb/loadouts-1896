@@ -63,8 +63,10 @@
         slotsUsed += getWeaponSlots(primaryWeapon.value);
 
         primaryWeaponAmmoSlots.value = [];
-        for (let i = 0; i < primaryWeapon.value.ammo_slots; ++i) {
-            primaryWeaponAmmoSlots.value.push(random(primaryWeapon.value.ammo_types));
+        if (primaryWeapon.value.ammo_types.length) {
+            for (let i = 0; i < primaryWeapon.value.ammo_slots; ++i) {
+                primaryWeaponAmmoSlots.value.push(random(primaryWeapon.value.ammo_types));
+            }
         }
         if (primaryWeapon.value.can_akimbo) {
             isPrimaryWeaponAkimbo.value = randomBoolean();
@@ -82,8 +84,10 @@
         slotsUsed += getWeaponSlots(secondaryWeapon.value);
 
         secondaryWeaponAmmoSlots.value = [];
-        for (let i = 0; i < secondaryWeapon.value.ammo_slots; ++i) {
-            secondaryWeaponAmmoSlots.value.push(random(secondaryWeapon.value.ammo_types));
+        if (secondaryWeapon.value.ammo_types.length) {
+            for (let i = 0; i < secondaryWeapon.value.ammo_slots; ++i) {
+                secondaryWeaponAmmoSlots.value.push(random(secondaryWeapon.value.ammo_types));
+            }
         }
 
         if (secondaryWeapon.value.can_akimbo && (totalSlots - slotsUsed) >= 1) {
@@ -151,7 +155,7 @@
                     {{ primaryWeapon.name }} <span v-if="isPrimaryWeaponAkimbo">(Dual-wield)</span>
                 </div>
 
-                <div class="flex w-full border-t border-stone-700">
+                <div v-if="primaryWeaponAmmoSlots.length" class="flex w-full border-t border-stone-700">
                     <div v-for="ammoSlot in primaryWeaponAmmoSlots" class="px-4 py-2 flex-1 flex border-l first:border-0 border-stone-700">
                         {{ ammoSlot.name }}
                     </div>
@@ -163,7 +167,7 @@
                     {{ secondaryWeapon.name }} <span v-if="isSecondaryWeaponAkimbo">(Dual-wield)</span>
                 </div>
 
-                <div class="flex w-full border-t border-stone-700">
+                <div v-if="secondaryWeaponAmmoSlots.length" class="flex w-full border-t border-stone-700">
                     <div v-for="ammoSlot in secondaryWeaponAmmoSlots" class="px-4 py-2 flex-1 flex border-l first:border-0 border-stone-700">
                         {{ ammoSlot.name }}
                     </div>
