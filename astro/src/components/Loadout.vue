@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { useStrapi } from '@composables/useStrapi';
     import { random } from '@helpers/arrays';
+    import { randomBoolean } from '@helpers/booleans';
     import { randomInt } from '@helpers/numbers';
     import type { AmmoType, Consumable, Tool, Weapon } from '@types';
     import type { BaseQueryParams } from 'node_modules/@strapi/client/dist/types/content-api';
@@ -15,8 +16,11 @@
 
     const primaryWeapon = ref<Weapon>();
     const primaryWeaponAmmoSlots = ref<AmmoType[]>([]);
+    const isPrimaryWeaponAkimbo = ref<boolean>(false);
     const secondaryWeapon = ref<Weapon>();
     const secondaryWeaponAmmoSlots = ref<AmmoType[]>([]);
+    const isSecondaryWeaponAkimbo = ref<boolean>(false);
+    const requiresQuartermaster = ref<boolean>(false);
     const tools = ref<Tool[]>([]);
     const consumables = ref<Consumable[]>([]);
 
@@ -52,52 +56,46 @@
     };
 
     const onRandomize = () => {
-        let remainingSlots = 5;
+        const totalSlots = 5;
+        let slotsUsed: number = 0;
+
         primaryWeapon.value = random<Weapon>(dbWeapons.value);
+        slotsUsed += getWeaponSlots(primaryWeapon.value);
+
         primaryWeaponAmmoSlots.value = [];
         for (let i = 0; i < primaryWeapon.value.ammo_slots; ++i) {
             primaryWeaponAmmoSlots.value.push(random(primaryWeapon.value.ammo_types));
         }
-
-        switch (primaryWeapon.value.slots) {
-            case 'one':
-                remainingSlots -= 1;
-                break;
-
-            case 'two':
-                remainingSlots -= 2;
-                break;
-
-            case 'three':
-            default:
-                remainingSlots -= 3;
-                break;
+        if (primaryWeapon.value.can_akimbo) {
+            isPrimaryWeaponAkimbo.value = randomBoolean();
+            if (isPrimaryWeaponAkimbo.value) {
+                slotsUsed += 1;
+            }
+        } else {
+            isPrimaryWeaponAkimbo.value = false;
         }
 
         const potentialSecondaryWeapons = dbWeapons.value.filter(weapon => {
-            let slotValue = 0;
-            switch (weapon.slots) {
-                case 'one':
-                    slotValue = 1;
-                    break;
-                
-                case 'two':
-                    slotValue = 2;
-                    break;
-                    
-                case 'three':
-                default:
-                    slotValue = 3;
-                    break;
-            }
-
-            return slotValue <= remainingSlots;
+            return getWeaponSlots(weapon) <= (totalSlots - slotsUsed);
         });
         secondaryWeapon.value = random<Weapon>(potentialSecondaryWeapons);
+        slotsUsed += getWeaponSlots(secondaryWeapon.value);
+
         secondaryWeaponAmmoSlots.value = [];
         for (let i = 0; i < secondaryWeapon.value.ammo_slots; ++i) {
             secondaryWeaponAmmoSlots.value.push(random(secondaryWeapon.value.ammo_types));
         }
+
+        if (secondaryWeapon.value.can_akimbo && (totalSlots - slotsUsed) >= 1) {
+            isSecondaryWeaponAkimbo.value = randomBoolean();
+            if (isSecondaryWeaponAkimbo.value) {
+                slotsUsed += 1;
+            }
+        } else {
+            isSecondaryWeaponAkimbo.value = false;
+        }
+
+        requiresQuartermaster.value = slotsUsed >= 5;
 
         tools.value = [];
         const medkit = dbTools.value.find(t => t.name === 'Medkit');
@@ -121,6 +119,20 @@
             consumables.value.push(random(dbConsumables.value));
         }
     };
+
+    const getWeaponSlots = (weapon: Weapon): number => {
+        switch (weapon.slots) {
+            case 'one':
+                return 1;
+
+            case 'two':
+                return 2;
+
+            case 'three':
+            default:
+                return 3;
+        }
+    };
 </script>
 
 <template>
@@ -136,7 +148,7 @@
 
             <div v-if="primaryWeapon" class="flex flex-col rounded bg-stone-950 border border-stone-700">
                 <div class="flex-1 p-4">
-                    {{ primaryWeapon.name }}
+                    {{ primaryWeapon.name }} <span v-if="isPrimaryWeaponAkimbo">(Dual-wield)</span>
                 </div>
 
                 <div class="flex w-full border-t border-stone-700">
@@ -148,13 +160,23 @@
 
             <div v-if="secondaryWeapon" class="flex flex-col rounded bg-stone-950 border border-stone-700">
                 <div class="flex-1 p-4">
-                    {{ secondaryWeapon.name }}
+                    {{ secondaryWeapon.name }} <span v-if="isSecondaryWeaponAkimbo">(Dual-wield)</span>
                 </div>
 
                 <div class="flex w-full border-t border-stone-700">
                     <div v-for="ammoSlot in secondaryWeaponAmmoSlots" class="px-4 py-2 flex-1 flex border-l first:border-0 border-stone-700">
                         {{ ammoSlot.name }}
                     </div>
+                </div>
+            </div>
+
+            <div v-if="requiresQuartermaster" class="flex rounded bg-stone-950 border border-stone-700">
+                <div class="p-4 rounded-l bg-stone-800 border-r border-stone-700">
+                    <span class="fal fa-exclamation-triangle"></span>
+                </div>
+
+                <div class="p-4">
+                    Quartermaster
                 </div>
             </div>
         </section>
